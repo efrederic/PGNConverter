@@ -22,7 +22,8 @@ import java.io.FileOutputStream;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "DFP";
-    final int REQUEST_WRITE_ACCESS = 1;
+    final int REQUEST_WRITE_ACCESS_CUSTOM = 1;
+    final int REQUEST_WRITE_ACCESS_DROIDFISH = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         droidfish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                savePGN("DroidFish/pgn");
+                savePGN("DroidFish/pgn", REQUEST_WRITE_ACCESS_DROIDFISH);
             }
         });
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         custom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                savePGN("Documents/PGNs");
+                savePGN("Documents/PGNs", REQUEST_WRITE_ACCESS_CUSTOM);
             }
         });
     }
@@ -79,12 +80,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void savePGN(final String path) {
+    private void savePGN(final String path, int permissionRequest) {
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE_ACCESS);
+                    permissionRequest);
         } else {
             final EditText directoryText = new EditText(MainActivity.this);
             directoryText.setHint("File name");
@@ -105,16 +106,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        //TODO more tightly couple the request codes with the save paths
         switch (requestCode) {
-            case REQUEST_WRITE_ACCESS: {
+            case REQUEST_WRITE_ACCESS_CUSTOM:
+            case REQUEST_WRITE_ACCESS_DROIDFISH:
                 if (grantResults.length == 0 || grantResults[0]
                         == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(this, "Write permission required to save PGN files",
                             Toast.LENGTH_LONG).show();
+                } else if (requestCode == REQUEST_WRITE_ACCESS_CUSTOM) {
+                    savePGN("Documents/PGNs", REQUEST_WRITE_ACCESS_CUSTOM);
+                } else {
+                    savePGN("DroidFish/pgn", REQUEST_WRITE_ACCESS_DROIDFISH);
                 }
-            }
+                return;
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
