@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -13,6 +14,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
+        initPreferenceSummary(getPreferenceScreen());
     }
 
     @Override
@@ -29,7 +31,21 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference preference = findPreference(key);
+        updatePreferenceSummary(findPreference(key));
+    }
+
+    private void initPreferenceSummary(Preference preference) {
+        if (preference instanceof PreferenceGroup) {
+            PreferenceGroup group = (PreferenceGroup) preference;
+            for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+                initPreferenceSummary(group.getPreference(i));
+            }
+        } else {
+            updatePreferenceSummary(preference);
+        }
+    }
+
+    private void updatePreferenceSummary(Preference preference) {
         if (preference instanceof EditTextPreference) {
             preference.setSummary(((EditTextPreference) preference).getText());
         }

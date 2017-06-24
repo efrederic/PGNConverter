@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                sharedPreferences.getString(getString(R.string.default_save_location_key), "");
-                savePGN(getString(R.string.save_location_documents), REQUEST_WRITE_ACCESS_CUSTOM);
+                String saveLocation = sharedPreferences.getString(getString(R.string.default_save_location_key), "");
+                savePGN(saveLocation, REQUEST_WRITE_ACCESS_CUSTOM);
             }
         });
 

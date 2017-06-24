@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-        android:key="@string/default_save_location_key"
-        android:title="@string/default_save_location"
-        android:summary="@string/save_location_documents"
-        android:defaultValue="@string/save_location_documents"/>
+    <PreferenceCategory
+        android:title="@string/general_category">
+        <EditTextPreference
+            android:key="@string/default_save_location_key"
+            android:title="@string/default_save_location"
+            android:summary="@string/save_location_documents"
+            android:defaultValue="@string/save_location_documents" />
+    </PreferenceCategory>
 </PreferenceScreen>
