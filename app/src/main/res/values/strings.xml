@@ -3,4 +3,10 @@
     <string name="paste_pgn_here">Paste PGN text here.</string>
     <string name="save_droidfish">Send to DroidFish</string>
     <string name="save_pgn">Save PGN</string>
+    <string name="settings">Settings</string>
+    <string name="share">Share</string>
+    <string name="save_location_documents">Documents/PGNs</string>
+    <string name="save_location_droidfish">Droidfish/pgn</string>
+    <string name="default_save_location">Default save location</string>
+    <string name="default_save_location_key">pref_default_save_location</string>
 </resources>

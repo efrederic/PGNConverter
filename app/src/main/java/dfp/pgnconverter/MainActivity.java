@@ -2,8 +2,11 @@ package dfp.pgnconverter;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,29 +35,51 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button droidfish = (Button) findViewById(R.id.droidfish);
+        Button droidfish = findViewById(R.id.droidfish);
         droidfish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                savePGN("DroidFish/pgn", REQUEST_WRITE_ACCESS_DROIDFISH);
+                savePGN(getString(R.string.save_location_droidfish), REQUEST_WRITE_ACCESS_DROIDFISH);
             }
         });
 
-        Button custom = (Button) findViewById(R.id.custom);
+        Button custom = findViewById(R.id.custom);
         custom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                savePGN("Documents/PGNs", REQUEST_WRITE_ACCESS_CUSTOM);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                sharedPreferences.getString(getString(R.string.default_save_location_key), "");
+                savePGN(getString(R.string.save_location_documents), REQUEST_WRITE_ACCESS_CUSTOM);
             }
         });
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.share:
+                //sharePGN();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void createPGN(String path, String fileName, String pgnText) {
         FileOutputStream stream;
 
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File extDir = Environment
-                    .getExternalStoragePublicDirectory(path);
+            File extDir = Environment.getExternalStoragePublicDirectory(path);
             if (!extDir.mkdirs()) {
                 Log.e(TAG, "Failed to make directory");
             }
