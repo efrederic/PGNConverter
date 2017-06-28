@@ -69,13 +69,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.share:
-                //sharePGN();
+                sharePGN();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void createPGN(String path, String fileName, String pgnText) {
+    private void sharePGN() {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, ((EditText)findViewById(R.id.editText)).getText());
+        shareIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_chooser_title)));
+    }
+
+    private void createPGN(String path, String fileName) {
         FileOutputStream stream;
 
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -88,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
                     extDir,
                     fileName.contains(".pgn") ? fileName : fileName + ".pgn");
 
+            EditText pgnText = findViewById(R.id.editText);
             try {
                 if (!file.exists() && !file.createNewFile()) {
                     Log.e(TAG, "Failed to create file");
                 }
                 stream = new FileOutputStream(file);
-                stream.write(pgnText.getBytes());
+                stream.write(pgnText.getText().toString().getBytes());
                 stream.close();
                 Toast.makeText(this, String.format("%s sent to %s", file.getName(), path),
                         Toast.LENGTH_SHORT).show();
@@ -101,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Toast.makeText(this, "Error saving file", Toast.LENGTH_SHORT).show();
             }
-            ((EditText) findViewById(R.id.editText)).setText("");
+            pgnText.setText("");
         } else {
             Toast.makeText(this, "External media is not available", Toast.LENGTH_LONG).show();
         }
@@ -122,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            createPGN(path, directoryText.getText().toString(),
-                                    ((EditText) findViewById(R.id.editText)).getText().toString());
+                            createPGN(path, directoryText.getText().toString());
                         }
                     })
                     .show();
