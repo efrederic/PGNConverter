@@ -8,7 +8,10 @@
     <string name="save_location_documents">Documents/PGNs</string>
     <string name="save_location_droidfish">Droidfish/pgn</string>
     <string name="default_save_location">Default save location</string>
+    <string name="save_from_clipboard">Save directly from clipboard</string>
     <string name="default_save_location_key">pref_default_save_location</string>
+    <string name="save_from_clipboard_key">pref_copy_from_clipboard</string>
     <string name="general_category">General</string>
     <string name="share_chooser_title">Share text to…</string>
+    <string name="save_from_clipboard_summary">Create PGN files from the text currently copied to the clipboard</string>
 </resources>

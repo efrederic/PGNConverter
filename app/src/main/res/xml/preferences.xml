@@ -7,5 +7,10 @@
             android:title="@string/default_save_location"
             android:summary="@string/save_location_documents"
             android:defaultValue="@string/save_location_documents" />
+        <CheckBoxPreference
+            android:key="@string/save_from_clipboard_key"
+            android:title="@string/save_from_clipboard"
+            android:summary="@string/save_from_clipboard_summary"
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>
